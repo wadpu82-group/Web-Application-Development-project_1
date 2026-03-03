@@ -365,16 +365,23 @@ function isImagePath(img) {
 }
 
 function getFallbackFoodImage(name) {
-  return "https://source.unsplash.com/600x400/?food," + encodeURIComponent(name || "menu");
+  // Use a more reliable placeholder service
+  var encodedName = encodeURIComponent(name || "food");
+  return "https://placehold.co/400x300/5D4037/FFFFFF?text=" + encodedName;
 }
 
 function getFoodImageFromItem(item){
   var src = (item && item.photo) ? item.photo : (item ? item.img : "");
-  return isImagePath(src) ? src : getFallbackFoodImage(item && item.name);
+  // Check if the image path exists and is valid
+  if (isImagePath(src)) {
+    return src;
+  }
+  // Return fallback for invalid paths
+  return getFallbackFoodImage(item && item.name);
 }
 
 function getFoodImageOnError(itemName) {
-  return "this.onerror=null;this.src='" + getFallbackFoodImage(itemName).replace(/'/g, "\'") + "';";
+  return "this.onerror=null;this.src='" + getFallbackFoodImage(itemName).replace(/'/g, "\\'") + "';";
 }
 
 
